@@ -68,14 +68,8 @@ npm run test:watch
 | GET | `/readiness` | Readiness score, missing requirements, next milestones |
 | GET | `/timeline` | Chronological timeline events |
 
-## Business Logic
 
-- **Due dates** — `applicationDeadline − dueOffsetDays` (computed via `date-fns.subDays`)
-- **Readiness score** — `completed required items ÷ total required items × 100`
-- **Missing requirements** — required items with status not `complete`
-- **Timeline** — always sorted ascending by date; reflects checklist status immediately
-
-## Tradeoffs & What I'd Improve With More Time
+## Tradeoff
 
 ### In-memory store vs. a real database
 **Tradeoff:** Data resets on server restart. Profiles and checklists live in plain arrays in memory — easy to set up, deterministic for testing.
