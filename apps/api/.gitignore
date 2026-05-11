@@ -1,0 +1,8 @@
+# TypeScript build output
+dist/
+*.tsbuildinfo
+
+# Test coverage
+coverage/
+# Dependencies
+node_modules
