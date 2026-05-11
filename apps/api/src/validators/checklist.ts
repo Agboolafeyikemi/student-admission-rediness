@@ -11,7 +11,7 @@ export const updateChecklistItemSchema = z.object({
   status: z.enum(['not_started', 'in_progress', 'complete'], {
     errorMap: () => ({ message: "status must be 'not_started', 'in_progress', or 'complete'" }),
   }),
-  notes: z.string().max(1000, 'Notes must be 1000 characters or fewer').optional(),
+  notes: z.string().trim().max(1000, 'Notes must be 1000 characters or fewer').optional(),
 });
 
 export const checklistItemIdParamSchema = z.object({

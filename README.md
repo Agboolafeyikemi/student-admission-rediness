@@ -85,9 +85,6 @@ npm run test:watch
 **Tradeoff:** 5 programs and 38 requirements are hardcoded in `src/data/`. No migrations, no seed scripts, instant startup.
 **Would change:** Replace with a database-backed seed that can be reset per test run. Enables adding programs through an admin UI.
 
-### No authentication
-**Tradeoff:** Profile ID is passed as a query/body param. Anyone who knows your ID can read your data.
-**Would change:** Add JWT-based auth (or session cookies). The `profileId` in every request would come from the token, not the payload.
 
 ### Composable-based state (no Pinia)
 **Tradeoff:** Nuxt's built-in `useState` + composables work well at this scale, but cross-page state sharing becomes fragile as the app grows.

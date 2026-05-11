@@ -17,8 +17,8 @@ const testScoresSchema = z.object({
 });
 
 export const createProfileSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(100, 'Name must be 100 characters or fewer'),
-  email: z.string().email('Must be a valid email address'),
+  name: z.string().trim().min(1, 'Name is required').max(100, 'Name must be 100 characters or fewer'),
+  email: z.string().trim().toLowerCase().email('Must be a valid email address'),
   gpa: z
     .number({ invalid_type_error: 'GPA must be a number' })
     .min(0, 'GPA must be at least 0')
@@ -31,8 +31,8 @@ export const createProfileSchema = z.object({
 
 export const updateProfileSchema = z
   .object({
-    name: z.string().min(1, 'Name cannot be empty').max(100).optional(),
-    email: z.string().email('Must be a valid email address').optional(),
+    name: z.string().trim().min(1, 'Name cannot be empty').max(100).optional(),
+    email: z.string().trim().toLowerCase().email('Must be a valid email address').optional(),
     gpa: z.number().min(0, 'GPA must be at least 0').max(4, 'GPA cannot exceed 4.0').optional(),
     educationLevel: educationLevelSchema.optional(),
     targetTerm: targetTermSchema.optional(),

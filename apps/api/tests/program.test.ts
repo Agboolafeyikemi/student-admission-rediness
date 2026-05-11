@@ -7,7 +7,7 @@ const DEFAULT_PAGINATION = { page: 1, limit: 10 };
 
 describe('programService.list', () => {
   it('returns all programs with no filters', () => {
-    const result = programService.list({}, DEFAULT_PAGINATION);
+    const result = programService.list({}, { page: 1, limit: programs.length });
     expect(result.data).toHaveLength(programs.length);
     expect(result.total).toBe(programs.length);
   });
