@@ -105,8 +105,9 @@ function touchAll() {
 
 // ── Submission ────────────────────────────────────────────────────────
 
-const { createProfile, pending: profilePending, error: profileError } = useProfile()
-const { setProfileId } = useSession()
+const { createProfile, updateProfile, pending: profilePending, error: profileError } = useProfile()
+const { setProfileId, setProgramId, addSelectedProgram, clearPendingProgramId, session } = useSession()
+const { apiFetch } = useApi()
 
 const submitError = ref<string | null>(null)
 const toastMsg = ref('')
@@ -141,11 +142,27 @@ async function handleSubmit() {
     const profile = await createProfile(payload)
     setProfileId(profile.id)
 
-    // After profile creation, send the student to browse and pick a program
-    await navigateTo('/programs')
+    const pendingId = session.value.pendingProgramId
+    if (pendingId) {
+      // Complete the selection the user tried to make before having a profile
+      setProgramId(pendingId)
+      addSelectedProgram(pendingId)
+      clearPendingProgramId()
+      try {
+        await updateProfile(profile.id, { selectedProgramIds: [pendingId] })
+        await apiFetch('/checklists', { method: 'POST', body: { profileId: profile.id, programId: pendingId } })
+      } catch { /* non-fatal — dashboard will retry */ }
+      await navigateTo('/dashboard')
+    } else {
+      await navigateTo('/programs')
+    }
   } catch (err: unknown) {
     submitError.value = (err as Error).message
   }
+}
+
+function goToPrograms() {
+  return navigateTo('/programs')
 }
 </script>
 
@@ -291,8 +308,14 @@ async function handleSubmit() {
     <!-- Footer -->
     <div class="mt-6 flex items-center justify-between">
       <p class="text-[13px] text-ink-soft">
-        Already have a profile?
-        <NuxtLink to="/programs" class="font-[540] text-navy hover:underline">Browse programs</NuxtLink>
+        Prefer to explore the catalog first?
+        <button
+          type="button"
+          class="inline p-0 font-[540] text-navy underline decoration-navy/[0.35] underline-offset-2 transition-colors hover:text-navy-dark hover:decoration-navy"
+          @click="goToPrograms"
+        >
+          Browse programs
+        </button>
       </p>
       <UiButton :loading="profilePending" @click="handleSubmit">
         Create profile

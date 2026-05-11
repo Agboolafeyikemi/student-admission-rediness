@@ -1,10 +1,10 @@
 <script setup lang="ts">
-definePageMeta({ middleware: 'requires-profile' })
+definePageMeta({ layout: 'default' })
 
 const route = useRoute()
 const programId = route.params.id as string
 
-const { session, setProgramId, addSelectedProgram } = useSession()
+const { session, setProgramId, addSelectedProgram, setPendingProgramId } = useSession()
 const { updateProfile } = useProfile()
 const { apiFetch } = useApi()
 
@@ -17,8 +17,13 @@ const selecting = ref(false)
 const toastMsg = ref('')
 
 async function selectAndGo() {
-  selecting.value = true
   const profileId = session.value.profileId
+  if (!profileId) {
+    setPendingProgramId(programId)
+    await navigateTo('/onboarding')
+    return
+  }
+  selecting.value = true
   setProgramId(programId)
   addSelectedProgram(programId)
   try {

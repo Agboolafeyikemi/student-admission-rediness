@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { Program, ProgramDetail } from '@@/types'
 
-definePageMeta({ middleware: 'requires-profile' })
+definePageMeta({ layout: 'default' })
 
-const { session, setProgramId, addSelectedProgram } = useSession()
+const { session, setProgramId, addSelectedProgram, setPendingProgramId } = useSession()
 const { updateProfile } = useProfile()
 const { apiFetch } = useApi()
 
@@ -74,6 +74,11 @@ function closeModal() {
 
 async function selectProgram(programId: string) {
   const profileId = session.value.profileId
+  if (!profileId) {
+    setPendingProgramId(programId)
+    await navigateTo('/onboarding')
+    return
+  }
   setProgramId(programId)
   addSelectedProgram(programId)
   try {

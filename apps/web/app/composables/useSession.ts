@@ -7,6 +7,7 @@ export function useSession() {
     profileId: '',
     programId: '',
     selectedProgramIds: [],
+    pendingProgramId: '',
   }))
 
   function hydrate() {
@@ -21,6 +22,7 @@ export function useSession() {
         session.value.selectedProgramIds = parsed.selectedProgramIds
       else if (parsed.programId)
         session.value.selectedProgramIds = [parsed.programId]
+      if (parsed.pendingProgramId) session.value.pendingProgramId = parsed.pendingProgramId
     } catch {}
   }
 
@@ -49,10 +51,20 @@ export function useSession() {
     persist()
   }
 
+  function setPendingProgramId(id: string) {
+    session.value.pendingProgramId = id
+    persist()
+  }
+
+  function clearPendingProgramId() {
+    session.value.pendingProgramId = ''
+    persist()
+  }
+
   function clear() {
-    session.value = { profileId: '', programId: '', selectedProgramIds: [] }
+    session.value = { profileId: '', programId: '', selectedProgramIds: [], pendingProgramId: '' }
     if (import.meta.client) localStorage.removeItem(SESSION_KEY)
   }
 
-  return { session, hydrate, setProfileId, setProgramId, setSelectedProgramIds, addSelectedProgram, clear }
+  return { session, hydrate, setProfileId, setProgramId, setSelectedProgramIds, addSelectedProgram, setPendingProgramId, clearPendingProgramId, clear }
 }

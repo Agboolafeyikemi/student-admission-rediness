@@ -66,6 +66,8 @@ export interface Session {
   programId: string
   /** Client-mirrored list for catalog UX; kept in sync with PATCH /profiles when possible. */
   selectedProgramIds: string[]
+  /** Program the user tried to select before having a profile; cleared after auto-selection. */
+  pendingProgramId: string
 }
 
 export type EvidenceType = 'pdf_upload' | 'score_report' | 'reference_form' | 'payment' | 'other'
